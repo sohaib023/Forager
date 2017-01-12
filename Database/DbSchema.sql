@@ -3,81 +3,81 @@ CREATE SCHEMA Forager;
 USE Forager;
 
 CREATE TABLE Document(
-doc_ID INT PRIMARY KEY,
-doc_URL VARCHAR(150) UNIQUE NOT NULL,
+docID INT PRIMARY KEY AUTO_INCREMENT,
+docURL VARCHAR(50) UNIQUE NOT NULL,
 pageRank FLOAT,
-doc_Title VARCHAR(100)
+docTitle VARCHAR(50)
 );
 
 CREATE TABLE Word(
-word_ID INT PRIMARY KEY,
+wordID INT PRIMARY KEY AUTO_INCREMENT,
 word VARCHAR(30) UNIQUE NOT NULL
 );
 
 CREATE TABLE Topic(
-topic_ID INT PRIMARY KEY AUTO_INCREMENT,
-topid_Desc VARCHAR(30) NOT NULL
+topicID INT PRIMARY KEY AUTO_INCREMENT,
+topidDesc VARCHAR(20) NOT NULL
 );
 
-CREATE TABLE default_User(
-user_ID INT PRIMARY KEY AUTO_INCREMENT,
-IP_address VARCHAR(15)
+CREATE TABLE defaultUser(
+userID INT PRIMARY KEY AUTO_INCREMENT,
+IPaddress VARCHAR(15)
 );
 
-CREATE TABLE registered_User(
-user_ID INT PRIMARY KEY REFERENCES defaultUser(userID),
+CREATE TABLE registeredUser(
+userID INT PRIMARY KEY REFERENCES defaultUser(userID),
 Fname VARCHAR(15),
 Minit VARCHAR(1),
 Lname VARCHAR(15),
-login_ID VARCHAR(20) NOT NULL,
-user_Pass VARCHAR(20) NOT NULL,
-is_Admin BOOL,
-email_ID VARCHAR(30)
+loginID VARCHAR(20) NOT NULL,
+userPass VARCHAR(20) NOT NULL,
+isAdmin BOOL,
+emailID VARCHAR(30)
 );
 
 CREATE TABLE Advertisement(
-ad_ID INT PRIMARY KEY AUTO_INCREMENT,
-image_URL VARCHAR(50) NOT NULL
+adID INT PRIMARY KEY AUTO_INCREMENT,
+imageURL VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE User_Session(
-user_ID INT REFERENCES default_User(user_ID),
-Session_ID INT,
-start_Time DATETIME,
-end_Time DATETIME,
-CONSTRAINT user_session_pk PRIMARY KEY(user_ID,Session_ID)
+CREATE TABLE UserSession(
+userID INT REFERENCES defaultUser(userID),
+SessionID INT,
+startTime DATETIME,
+endTime DATETIME,
+CONSTRAINT user_session_pk PRIMARY KEY(userID,SessionID)
 );
 
 CREATE TABLE Anchors_From(
-source_ID INT REFERENCES Document(doc_ID) ON DELETE CASCADE,
-target_ID INT REFERENCES Document(doc_ID) ON DELETE CASCADE,
-anchor_Text VARCHAR(150)
+sourceID INT REFERENCES Document(docID),
+targetID INT REFERENCES Document(docID),
+anchorText VARCHAR(50)
 );
 
 CREATE TABLE Hits(
-doc_ID INT REFERENCES Document(doc_ID) ON DELETE CASCADE,
-word_ID INT REFERENCES Word(word_ID) ON DELETE CASCADE,
-w_Position INT,
-font_Size INT,
-is_Anchor BOOL
+docID INT REFERENCES Document(docID),
+wordID INT REFERENCES Word(wordID),
+wPosition INT,
+fontSize INT,
+isAnchor BOOL
 );
 
-CREATE TABLE doc_Accessed(
-Session_ID INT NOT NULL REFERENCES User_Session(Session_ID),
-doc_ID INT  NOT NULL REFERENCES Document(doc_ID) 
+CREATE TABLE docAccessed(
+SessionID INT NOT NULL REFERENCES UserSession(SessionID),
+docID INT  NOT NULL REFERENCES Document(docID) 
 );
 
 CREATE TABLE Likes(
-user_ID INT NOT NULL REFERENCES default_User(user_ID),
-topic_ID INT NOT NULL REFERENCES Topic(topic_ID)
+userID INT NOT NULL REFERENCES defaultUser(userID),
+topicID INT NOT NULL REFERENCES Topic(topicID)
 );
 
-CREATE TABLE doc_Belongs_To(
-doc_ID INT NOT NULL REFERENCES document(doc_ID),
-topic_ID INT NOT NULL REFERENCES Topic(topic_ID) 
+CREATE TABLE docBelongsTo(
+docID INT NOT NULL REFERENCES document(docID),
+topicID INT NOT NULL REFERENCES Topic(topicID) 
 );
 
-CREATE TABLE ad_Belongs_To(
-ad_ID INT NOT NULL REFERENCES Advertisement(ad_ID),
-topic_ID INT NOT NULL REFERENCES Topic(topic_ID) 
+CREATE TABLE adBelongsTo(
+adID INT NOT NULL REFERENCES Advertisement(adID),
+topicID INT NOT NULL REFERENCES Topic(topicID) 
 );
